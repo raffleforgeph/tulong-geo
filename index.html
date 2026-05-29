@@ -219,7 +219,7 @@ a{color:var(--accent);text-decoration:none}
     <div style="font-size:13px;color:#555;margin-bottom:14px;line-height:1.7">Scan the QR code below with your e-wallet and send any amount you'd like. You can leave your name so we can thank you, or stay anonymous.</div>
     <div style="background:#fff;border-radius:14px;padding:12px;display:inline-block;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E0DDD6;margin-bottom:12px"><img id="pledge-qr" src="" alt="QR" style="width:280px;height:auto;display:block;border-radius:10px"></div>
     <div style="font-size:9px;color:var(--muted);margin-bottom:16px">QR Ph &middot; No Fees &middot; Any E-Wallet</div>
-    <div style="text-align:center;margin-bottom:14px"><a id="bp-save-qr" href="" onclick="openQR(this);return false;" style="display:inline-flex;align-items:center;gap:5px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);font-size:12px;font-weight:600;padding:9px 16px;border-radius:9px;text-decoration:none;cursor:pointer">&#128247; View QR to Save</a></div>
+    <div style="text-align:center;margin-bottom:14px"><div style="background:rgba(26,107,60,.06);border:1px solid rgba(26,107,60,.15);border-radius:9px;padding:8px 12px;font-size:11px;color:var(--muted);text-align:center">&#128248; Take a screenshot of this QR code to pay</div></div>
     <div style="border-top:1px solid var(--border);padding-top:14px">
       <div style="font-family:var(--fd);font-size:14px;font-weight:700;margin-bottom:8px">Leave Your Name (Optional)</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:360px;margin:0 auto">
@@ -256,7 +256,7 @@ a{color:var(--accent);text-decoration:none}
   <div style="font-family:var(--fd);font-size:18px;font-weight:700;margin-bottom:10px">Scan &amp; Pay</div>
   <div class="bp-amt"><div class="bp-albl">Amount</div><div class="bp-aval" id="bp-amount">&#8369;0</div><div style="font-size:10px;color:var(--muted)" id="bp-esub"></div></div>
   <div style="text-align:center;margin-bottom:12px"><div style="background:#fff;border-radius:14px;padding:12px;display:inline-block;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E0DDD6"><img id="bp-qr-img" src="" alt="QR" style="width:280px;height:auto;display:block;border-radius:10px"></div><div style="font-size:9px;color:var(--muted);margin-top:6px">QR Ph &middot; No Fees</div></div>
-  <div style="text-align:center;margin-bottom:12px"><a onclick="openQR(null);return false;" style="display:inline-flex;align-items:center;gap:5px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);font-size:12px;font-weight:600;padding:9px 16px;border-radius:9px;text-decoration:none;cursor:pointer">&#128247; View QR to Save</a></div>
+  <div style="text-align:center;margin-bottom:12px"><div style="background:rgba(26,107,60,.06);border:1px solid rgba(26,107,60,.15);border-radius:9px;padding:8px 12px;font-size:11px;color:var(--muted);text-align:center">&#128248; Take a screenshot of this QR code to pay</div></div>
   <div class="bp-ref"><div><div style="font-size:9px;color:var(--muted)">Reference Code:</div><div class="bp-rc" id="bp-rc">GEO-XXX</div></div><button class="bp-cp" id="bp-copy-ref" onclick="cpRef()">Copy</button></div>
   <div style="background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:7px">How to Pay:</div><div id="bp-instructions"></div></div>
   <div style="background:rgba(26,107,60,.04);border:1px solid rgba(26,107,60,.15);border-radius:9px;padding:10px 12px;margin-bottom:12px;display:flex;gap:8px"><span style="font-size:14px;flex-shrink:0">&#9888;</span><div style="font-size:11px;color:var(--muted);line-height:1.5"><strong style="color:var(--text)">Keep your proof of payment.</strong> Screenshot your confirmation.</div></div>
@@ -345,14 +345,23 @@ function proceedToPay(){
 function openBP(amount,desc,ref){
   document.getElementById('bp-amount').innerHTML='\u20b1'+amount.toLocaleString();
   document.getElementById('bp-esub').textContent=desc;
-  document.getElementById('bp-rc').textContent=ref;document.getElementById('pv-rc').textContent=ref;
+  document.getElementById('bp-rc').textContent=ref;
+  document.getElementById('pv-rc').textContent=ref;
   if(CFG.qrImage){document.getElementById('bp-qr-img').src=CFG.qrImage;}
   var isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(window.innerWidth<768);
-  var instr='';
-  if(isMobile){instr='<div class="bp-step"><div class="bp-sn">1</div><div>Tap <strong>Save QR Code</strong></div></div><div class="bp-step"><div class="bp-sn">2</div><div>Open <strong>GCash/Maya</strong></div></div><div class="bp-step"><div class="bp-sn">3</div><div><strong>Scan QR</strong> > <strong>Upload from Gallery</strong></div></div><div class="bp-step"><div class="bp-sn">4</div><div>Amount: <strong>\u20b1'+amount.toLocaleString()+'</strong></div></div><div class="bp-step"><div class="bp-sn">5</div><div>Notes: <strong>'+ref+'</strong></div></div><div class="bp-step"><div class="bp-sn">6</div><div><strong>Screenshot</strong> your confirmation</div></div>';}
-  else{instr='<div class="bp-step"><div class="bp-sn">1</div><div>Open e-wallet, <strong>scan the QR</strong></div></div><div class="bp-step"><div class="bp-sn">2</div><div>Amount: <strong>\u20b1'+amount.toLocaleString()+'</strong></div></div><div class="bp-step"><div class="bp-sn">3</div><div>Notes: <strong>'+ref+'</strong></div></div><div class="bp-step"><div class="bp-sn">4</div><div><strong>Screenshot</strong> your confirmation</div></div>';}
+  var amtStr='\u20b1'+amount.toLocaleString();
+  var s1='<div class="bp-step"><div class="bp-sn">1</div><div><strong>Screenshot</strong> this QR code now (Power + Vol Down)</div></div>';
+  var s2='<div class="bp-step"><div class="bp-sn">2</div><div>Open <strong>GCash or Maya</strong></div></div>';
+  var s3='<div class="bp-step"><div class="bp-sn">3</div><div>Tap <strong>Scan QR</strong> \u2192 <strong>Upload from Gallery</strong> \u2192 select screenshot</div></div>';
+  var s3d='<div class="bp-step"><div class="bp-sn">3</div><div>Scan directly from screen OR upload your screenshot</div></div>';
+  var s4='<div class="bp-step"><div class="bp-sn">4</div><div>Enter exact amount: <strong>'+amtStr+'</strong></div></div>';
+  var s5='<div class="bp-step"><div class="bp-sn">5</div><div>In <strong>Notes/Message</strong>, type ref: <strong>'+ref+'</strong></div></div>';
+  var s6='<div class="bp-step"><div class="bp-sn">6</div><div>Confirm then <strong>screenshot your receipt</strong> as proof</div></div>';
+  var s7='<div class="bp-step"><div class="bp-sn">7</div><div>Come back and tap <strong>I\u2019ve Paid</strong> below</div></div>';
+  var instr=isMobile?(s1+s2+s3+s4+s5+s6+s7):(s1+s2+s3d+s4+s5+s6);
   document.getElementById('bp-instructions').innerHTML=instr;
-  document.getElementById('bp-sent').disabled=false;document.getElementById('bp-sent').innerHTML='\u2705 I\'ve Paid';
+  document.getElementById('bp-sent').disabled=false;
+  document.getElementById('bp-sent').textContent='\u2705 I\u2019ve Paid';
   document.getElementById('bp-modal').classList.add('open');
 }
 function cpRef(){var ref=S.currentRef||'';if(navigator.clipboard){navigator.clipboard.writeText(ref).then(function(){var b=document.getElementById('bp-copy-ref');b.textContent='Copied!';b.classList.add('copied');setTimeout(function(){b.textContent='Copy';b.classList.remove('copied');},2000);toast('Copied!',1500);setTimeout(function(){try{navigator.clipboard.writeText('');}catch(e){}},60000);});}else{toast('Ref: '+ref,2500);}}
@@ -412,16 +421,6 @@ function shareFB(){
   var url=encodeURIComponent(window.location.href);
   var msg=encodeURIComponent('Please support our friend Roy in funding his brother Geo\'s college tuition. Every peso counts! Join the raffle or make a pledge \u2014 your help means the world. \ud83d\ude4f');
   window.open('https://www.facebook.com/sharer/sharer.php?u='+url+'&quote='+msg,'_blank','width=600,height=400');
-}
-
-function openQR(el){
-  if(!CFG.qrImage)return;
-  // Open QR in new tab - works in all browsers including FB in-app
-  var w=window.open('','_blank');
-  if(w){
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment QR</title></head><body style="margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;font-family:sans-serif"><p style="color:#fff;font-size:14px;margin-bottom:12px;text-align:center">Long-press the QR &rarr; Save Image</p><img src="'+CFG.qrImage+'" style="max-width:320px;width:100%;border-radius:12px;border:6px solid white" alt="QR"><p style="color:#aaa;font-size:11px;margin-top:12px;text-align:center">Open GCash/Maya &rarr; Scan QR &rarr; Upload from Gallery</p></body></html>');
-    w.document.close();
-  }
 }
 
 function init(){
